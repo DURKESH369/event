@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #312e81 25%, #4c1d95 50%, #1e40af 75%, #1e3a8a 100%);
+      background-size: 400% 400%;
+      animation: aurora 18s ease-in-out infinite;
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 24px;
+      padding: 32px 36px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(59, 130, 246, 0.2);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: riseIn 0.8s ease forwards 0.2s;
+    }
+    h1 { 
+      margin: 0 0 8px 0; 
+      text-align: center;
+      font-size: 36px;
+      color: #ffffff;
+      font-weight: 700;
+      text-shadow: 
+        0 2px 10px rgba(0,0,0,0.3),
+        0 0 20px rgba(96, 165, 250, 0.3);
+      letter-spacing: -0.5px;
+    }
+    .top-bar { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin: 24px 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    thead {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.95) 100%);
+    }
+    th, td {
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px 12px;
+      text-align: center;
+      font-size: 14px;
+      color: #ffffff;
+    }
+    th { 
+      background: rgba(30, 41, 59, 0.95);
+      font-weight: 600;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+    }
+    td {
+      background: rgba(15, 23, 42, 0.6);
+      transition: background 0.2s ease;
+    }
+    tbody tr:hover td {
+      background: rgba(30, 41, 59, 0.7);
+    }
+    .gold { 
+      color: #fbbf24; 
+      font-weight: 700; 
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); 
+    }
+    .silver { 
+      color: #e5e7eb; 
+      font-weight: 700; 
+    }
+    .bronze { 
+      color: #fb923c; 
+      font-weight: 700; 
+    }
+    button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .btn-danger { 
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+    }
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+    }
+    .btn-secondary { 
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
+    }
+    .btn-outline { 
+      background: transparent; 
+      border: 2px solid rgba(59, 130, 246, 0.5);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+    .btn-outline:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+    .status { 
+      font-size: 14px; 
+      color: #9ca3af;
+      font-weight: 500;
+      margin: 12px 0;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    tbody tr {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: rowFade 0.5s ease forwards;
+    }
+    .timer-control {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.9) 100%);
+      border: 2px solid rgba(59, 130, 246, 0.4);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 32px;
+      text-align: center;
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.5),
+        0 0 40px rgba(59, 130, 246, 0.15),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .timer-control::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+    .timer-label {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .timer-display {
+      font-size: 56px;
+      font-weight: 700;
+      color: #60a5fa;
+      text-shadow: 
+        0 0 20px rgba(96, 165, 250, 0.6),
+        0 0 40px rgba(96, 165, 250, 0.3);
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .timer-display.running {
+      color: #34d399;
+      text-shadow: 
+        0 0 20px rgba(52, 211, 153, 0.6),
+        0 0 40px rgba(52, 211, 153, 0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .timer-display.stopped {
+      color: #f87171;
+      text-shadow: 
+        0 0 20px rgba(248, 113, 113, 0.6),
+        0 0 40px rgba(248, 113, 113, 0.3);
+    }
+    .timer-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-start {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+    .btn-start:hover:not(:disabled) {
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.6);
+      transform: translateY(-2px);
+    }
+    .btn-start:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-stop {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+      padding: 14px 32px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+    .btn-stop:hover:not(:disabled) {
+      box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+      transform: translateY(-2px);
+    }
+    .btn-stop:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #timer-status {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.02); }
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes aurora {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes riseIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes rowFade {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+      .container {
+        padding: 20px 24px;
+        border-radius: 16px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .top-bar > div {
+        width: 100%;
+      }
+      .top-bar button {
+        width: 100%;
+      }
+      .timer-control {
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+      .timer-display {
+        font-size: 42px;
+        letter-spacing: 2px;
+      }
+      .timer-buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .timer-buttons button {
+        width: 100%;
+      }
+      .section-title {
+        font-size: 16px;
+        margin: 20px 0 12px 0;
+      }
+      table {
+        font-size: 12px;
+      }
+      th, td {
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+      th {
+        font-size: 10px;
+      }
+      .button-group {
+        flex-direction: column;
+      }
+      .button-group button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      .container {
+        padding: 16px 20px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .timer-display {
+        font-size: 36px;
+        letter-spacing: 1px;
+      }
+      .timer-label {
+        font-size: 11px;
+      }
+      table {
+        font-size: 11px;
+      }
+      th, td {
+        padding: 8px 6px;
+        font-size: 11px;
+      }
+      button {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <h1>Admin Dashboard</h1>
+      <div>
+        <button class="btn-secondary" onclick="location.href='index.html'">Back</button>
+      </div>
+    </div>
+
+    <!-- Timer Control Section -->
+    <div class="timer-control">
+      <div class="timer-label">Game Timer Control</div>
+      <div class="timer-display" id="timer-display">40:00</div>
+      <div class="timer-buttons">
+        <button class="btn-start" id="start-btn" onclick="startTimer()">Start Timer</button>
+        <button class="btn-stop" id="stop-btn" onclick="stopTimer()" disabled>Stop Timer</button>
+      </div>
+      <div class="status" id="timer-status" style="margin-top: 10px;">Timer is stopped</div>
+    </div>
+
+    <div class="section-title">Leaderboard</div>
+    <p class="status" id="status">Loading leaderboard...</p>
+
+    <div style="overflow-x: auto; border-radius: 12px;">
+      <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Email</th>
+          <th>College / Others</th>
+          <th>Score</th>
+          <th>Wrong</th>
+          <th>Time (sec)</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- Filled by JS -->
+      </tbody>
+    </table>
+    </div>
+
+    <div class="section-title">Actions</div>
+    <div class="button-group">
+      <button class="btn-secondary" onclick="downloadExcel()">📥 Download Excel</button>
+      <button class="btn-outline" onclick="showRaw()">📋 Show Raw Data</button>
+      <button class="btn-danger" onclick="clearAll()">🗑️ Clear All Scores</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+
+    const tableBody = document.getElementById("table-body");
+    const statusEl = document.getElementById("status");
+    const timerDisplay = document.getElementById("timer-display");
+    const timerStatus = document.getElementById("timer-status");
+    const startBtn = document.getElementById("start-btn");
+    const stopBtn = document.getElementById("stop-btn");
+    
+    let timerInterval = null;
+    let timerListener = null;
+    const TIMER_DURATION = 40 * 60; // 40 minutes in seconds
+
+    function getStats(player) {
+      const score = typeof player.score === "number" ? player.score : parseFloat(player.score) || 0;
+      const wrong = typeof player.wrongCount === "number" ? player.wrongCount : parseFloat(player.wrongCount) || 0;
+      const time = typeof player.time === "number" ? player.time : parseFloat(player.time) || Number.MAX_VALUE;
+      return { score, wrong, time };
+    }
+
+    function sortPlayers(players) {
+      return players.slice().sort((a, b) => {
+        const aStats = getStats(a);
+        const bStats = getStats(b);
+        if (aStats.score !== bStats.score) return bStats.score - aStats.score;
+        if (aStats.wrong !== bStats.wrong) return aStats.wrong - bStats.wrong;
+        if (aStats.time !== bStats.time) return aStats.time - bStats.time;
+        const tsA = new Date(a.timestamp || 0).getTime();
+        const tsB = new Date(b.timestamp || 0).getTime();
+        return tsA - tsB;
+      });
+    }
+
+    async function loadLeaderboard() {
+      statusEl.textContent = "Loading leaderboard...";
+      tableBody.innerHTML = "";
+      try {
+        const snap = await db.collection("players").get();
+        const players = [];
+        snap.forEach(doc => {
+          players.push({ id: doc.id, ...doc.data() });
+        });
+        if (players.length === 0) {
+          statusEl.textContent = "No players yet.";
+          tableBody.innerHTML = "<tr><td colspan='8'>No data</td></tr>";
+          return;
+        }
+        const ordered = sortPlayers(players);
+        statusEl.textContent = "Total players: " + players.length;
+
+        ordered.forEach((p, index) => {
+          const rank = index + 1;
+          const tr = document.createElement("tr");
+          tr.style.animationDelay = `${index * 0.05}s`;
+
+          let cls = "";
+          if (rank === 1) cls = "gold";
+          else if (rank === 2) cls = "silver";
+          else if (rank === 3) cls = "bronze";
+
+          const email = p.email || "";
+          const college = p.college || "";
+          const { score, wrong, time } = getStats(p);
+          const safeTime = Number.isFinite(time) ? time : 0;
+
+          tr.innerHTML = `
+            <td class="${cls}">${rank}</td>
+            <td class="${cls}">${p.name || "Unknown"}</td>
+            <td>${email}</td>
+            <td>${college}</td>
+            <td class="${cls}">${score}</td>
+            <td class="${cls}">${wrong}</td>
+            <td class="${cls}">${safeTime.toFixed(2)}</td>
+            <td>${p.timestamp || ""}</td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error(e);
+        statusEl.textContent = "Error loading data.";
+      }
+    }
+
+    async function clearAll() {
+      if (!confirm("Are you sure you want to delete ALL scores?")) return;
+      try {
+        const snap = await db.collection("players").get();
+        const batch = db.batch();
+        snap.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+        alert("All scores cleared.");
+        loadLeaderboard();
+      } catch (e) {
+        console.error(e);
+        alert("Error clearing data.");
+      }
+    }
+
+    async function showRaw() {
+      try {
+        const snap = await db.collection("players").get();
+        const arr = [];
+        snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+        alert(JSON.stringify(arr, null, 2));
+      } catch (e) {
+        console.error(e);
+        alert("Error reading data.");
+      }
+    }
+
+    async function downloadExcel() {
+      try {
+        statusEl.textContent = "Preparing Excel...";
+        const snap = await db.collection("players").get();
+        const players = [];
+        snap.forEach(doc => players.push({ id: doc.id, ...doc.data() }));
+        if (!players.length) {
+          alert("No data to export.");
+          statusEl.textContent = "No players yet.";
+          return;
+        }
+        const ordered = sortPlayers(players);
+        const rows = [
+          ["Rank","Player","Email","College / Others","Score","Wrong","Time (sec)","Timestamp"]
+        ];
+        ordered.forEach((player, idx) => {
+          const { score, wrong, time } = getStats(player);
+          rows.push([
+            idx + 1,
+            player.name || "Unknown",
+            player.email || "",
+            player.college || "",
+            score,
+            wrong,
+            Number.isFinite(time) ? time.toFixed(2) : "",
+            player.timestamp || ""
+          ]);
+        });
+
+        const csv = rows.map(row =>
+          row.map(value => `"${String(value ?? "").replace(/"/g, '""')}"`).join(",")
+        ).join("\n");
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `scoreboard-${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        statusEl.textContent = "Total players: " + players.length;
+      } catch (e) {
+        console.error(e);
+        alert("Error exporting data.");
+        statusEl.textContent = "Error exporting.";
+      }
+    }
+
+    // Timer Functions
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    async function loadTimerState() {
+      try {
+        const doc = await db.collection("gameControl").doc("timer").get();
+        if (doc.exists) {
+          const data = doc.data();
+          const now = Date.now();
+          const startTime = data.startTime || 0;
+          const isRunning = data.isRunning || false;
+          
+          if (isRunning && startTime > 0) {
+            const elapsed = Math.floor((now - startTime) / 1000);
+            const remaining = Math.max(0, TIMER_DURATION - elapsed);
+            
+            if (remaining > 0) {
+              timerDisplay.textContent = formatTime(remaining);
+              timerDisplay.className = "timer-display running";
+              startBtn.disabled = true;
+              stopBtn.disabled = false;
+              timerStatus.textContent = "Timer is running";
+              startLocalTimer(remaining);
+            } else {
+              // Timer expired
+              timerDisplay.textContent = "00:00";
+              timerDisplay.className = "timer-display stopped";
+              startBtn.disabled = false;
+              stopBtn.disabled = true;
+              timerStatus.textContent = "Timer has ended";
+              await db.collection("gameControl").doc("timer").update({
+                isRunning: false,
+                remainingSeconds: 0
+              });
+            }
+          } else {
+            const remaining = data.remainingSeconds !== undefined ? data.remainingSeconds : TIMER_DURATION;
+            timerDisplay.textContent = formatTime(remaining);
+            timerDisplay.className = "timer-display stopped";
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timerStatus.textContent = "Timer is stopped";
+          }
+        } else {
+          // Initialize timer document
+          await db.collection("gameControl").doc("timer").set({
+            isRunning: false,
+            remainingSeconds: TIMER_DURATION,
+            startTime: 0
+          });
+          timerDisplay.textContent = formatTime(TIMER_DURATION);
+          timerDisplay.className = "timer-display stopped";
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          timerStatus.textContent = "Timer is stopped";
+        }
+      } catch (e) {
+        console.error("Error loading timer state:", e);
+        timerStatus.textContent = "Error loading timer";
+      }
+    }
+
+    function startLocalTimer(remainingSeconds) {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      
+      let remaining = remainingSeconds;
+      timerInterval = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerDisplay.textContent = "00:00";
+          timerDisplay.className = "timer-display stopped";
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          timerStatus.textContent = "Timer has ended";
+          // Update Firebase
+          db.collection("gameControl").doc("timer").update({
+            isRunning: false,
+            remainingSeconds: 0
+          });
+        } else {
+          timerDisplay.textContent = formatTime(remaining);
+        }
+      }, 1000);
+    }
+
+    async function startTimer() {
+      try {
+        const now = Date.now();
+        await db.collection("gameControl").doc("timer").set({
+          isRunning: true,
+          startTime: now,
+          remainingSeconds: TIMER_DURATION
+        }, { merge: true });
+        
+        timerDisplay.textContent = formatTime(TIMER_DURATION);
+        timerDisplay.className = "timer-display running";
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        timerStatus.textContent = "Timer started - 40 minutes remaining";
+        
+        startLocalTimer(TIMER_DURATION);
+      } catch (e) {
+        console.error("Error starting timer:", e);
+        alert("Error starting timer: " + e.message);
+      }
+    }
+
+    async function stopTimer() {
+      try {
+        const doc = await db.collection("gameControl").doc("timer").get();
+        if (doc.exists) {
+          const data = doc.data();
+          const now = Date.now();
+          const startTime = data.startTime || 0;
+          let remaining = TIMER_DURATION;
+          
+          if (data.isRunning && startTime > 0) {
+            const elapsed = Math.floor((now - startTime) / 1000);
+            remaining = Math.max(0, TIMER_DURATION - elapsed);
+          } else {
+            remaining = data.remainingSeconds !== undefined ? data.remainingSeconds : TIMER_DURATION;
+          }
+          
+          await db.collection("gameControl").doc("timer").update({
+            isRunning: false,
+            remainingSeconds: remaining,
+            startTime: 0
+          });
+          
+          if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+          }
+          
+          timerDisplay.textContent = formatTime(remaining);
+          timerDisplay.className = "timer-display stopped";
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          timerStatus.textContent = `Timer stopped - ${formatTime(remaining)} remaining`;
+        }
+      } catch (e) {
+        console.error("Error stopping timer:", e);
+        alert("Error stopping timer: " + e.message);
+      }
+    }
+
+    // Listen for real-time timer updates
+    function setupTimerListener() {
+      if (timerListener) {
+        timerListener(); // Unsubscribe previous listener
+      }
+      
+      timerListener = db.collection("gameControl").doc("timer").onSnapshot((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          const now = Date.now();
+          const startTime = data.startTime || 0;
+          const isRunning = data.isRunning || false;
+          
+          if (isRunning && startTime > 0) {
+            const elapsed = Math.floor((now - startTime) / 1000);
+            const remaining = Math.max(0, TIMER_DURATION - elapsed);
+            
+            if (remaining > 0) {
+              timerDisplay.textContent = formatTime(remaining);
+              timerDisplay.className = "timer-display running";
+              startBtn.disabled = true;
+              stopBtn.disabled = false;
+              timerStatus.textContent = "Timer is running";
+              
+              if (!timerInterval) {
+                startLocalTimer(remaining);
+              }
+            } else {
+              if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+              }
+              timerDisplay.textContent = "00:00";
+              timerDisplay.className = "timer-display stopped";
+              startBtn.disabled = false;
+              stopBtn.disabled = true;
+              timerStatus.textContent = "Timer has ended";
+            }
+          } else {
+            if (timerInterval) {
+              clearInterval(timerInterval);
+              timerInterval = null;
+            }
+            const remaining = data.remainingSeconds !== undefined ? data.remainingSeconds : TIMER_DURATION;
+            timerDisplay.textContent = formatTime(remaining);
+            timerDisplay.className = "timer-display stopped";
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            timerStatus.textContent = "Timer is stopped";
+          }
+        }
+      }, (error) => {
+        console.error("Timer listener error:", error);
+      });
+    }
+
+    // Initialize
+    loadLeaderboard();
+    loadTimerState();
+    setupTimerListener();
+    
+    // Cleanup on page unload
+    window.addEventListener("beforeunload", () => {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      if (timerListener) {
+        timerListener();
+      }
+    });
+  </script>
+</body>
+</html>
